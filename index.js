@@ -46,9 +46,16 @@ async function run() {
         // Get single jobs data from db
         app.get('/jobs/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await jobsCollection.findOne(query)
             res.send(result);
+        })
+
+        // Only my posted job data
+        app.get('/job/:email', async (req, res) => {
+            const email = req.params.email;
+            const result = await jobsCollection.find({ 'buyer.email' : email}).toArray();
+            res.send(result)
         })
 
         // Save bids data to database collection
