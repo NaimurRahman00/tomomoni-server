@@ -51,6 +51,14 @@ async function run() {
             res.send(result);
         })
 
+        // Delete single jobs data from db
+        app.delete('/jobs/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await jobsCollection.deleteOne(query)
+            res.send(result);
+        })
+
         // Save bids data to database collection
         app.post('/bid', async (req, res) => {
             const bidData = req.body;
