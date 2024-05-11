@@ -35,6 +35,7 @@ async function run() {
         // await client.connect();
 
         const jobsCollection = client.db('tomomoni').collection('Jobs')
+        const bidsCollection = client.db('tomomoni').collection('bids')
 
         // Get all jobs data from db
         app.get('/jobs', async (req, res) => {
@@ -43,11 +44,18 @@ async function run() {
         });
 
         // Get single jobs data from db
-        app.get('/job/:id', async (req, res) => {
+        app.get('/jobs/:id', async (req, res) => {
             const id = req.params.id;
             const query = {_id: new ObjectId(id)}
             const result = await jobsCollection.findOne(query)
             res.send(result);
+        })
+
+        // Save bids data to database collection
+        app.post('/bid', async (req, res) => {
+            const bidData = req.body;
+            const result = await bidsCollection.insertOne(bidData);
+            res.send(result)
         })
 
         // Send a ping to confirm a successful connection
