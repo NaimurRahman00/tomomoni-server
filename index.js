@@ -47,15 +47,8 @@ async function run() {
         app.get('/jobs/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
-            const result = await jobsCollection.findOne(query)
+            const result = await jobsCollection.findOne(query);
             res.send(result);
-        })
-
-        // Only my posted job data
-        app.get('/job/:email', async (req, res) => {
-            const email = req.params.email;
-            const result = await jobsCollection.find({ 'buyer.email' : email}).toArray();
-            res.send(result)
         })
 
         // Save bids data to database collection
@@ -69,6 +62,14 @@ async function run() {
         app.post('/job', async (req, res) => {
             const jobData = req.body;
             const result = await jobsCollection.insertOne(jobData);
+            res.send(result)
+        })
+
+        // Only my posted job data
+        app.get('/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { "buyer.email": email }
+            const result = await jobsCollection.find(query).toArray();
             res.send(result)
         })
 
