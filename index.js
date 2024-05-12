@@ -64,7 +64,7 @@ async function run() {
             const id = req.params.id;
             const updateJobData = req.body;
             const query = { _id: new ObjectId(id) }
-            const options = {upsert: true}
+            const options = { upsert: true }
             const updateDoc = {
                 $set: {
                     ...updateJobData
@@ -88,11 +88,27 @@ async function run() {
             res.send(result)
         })
 
-        // Only my posted job data
+        // Only my posted job data using email
         app.get('/:email', async (req, res) => {
             const email = req.params.email
             const query = { "buyer.email": email }
             const result = await jobsCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        // Only my applied job data using email
+        app.get('/my-email/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { email }
+            const result = await bidsCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        // Find bid request data using buyer email
+        app.get('/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { buyerEmail: email }
+            const result = await bidsCollection.find(query).toArray();
             res.send(result)
         })
 
