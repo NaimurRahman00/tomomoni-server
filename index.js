@@ -51,6 +51,14 @@ async function run() {
             res.send(result);
         })
 
+        // get title based  data 
+        app.get('/:title', async (req, res) => {
+            const title = req.params.title;
+            const query = { title : title }
+            const result = await jobsCollection.find(query).toArray();
+            res.send(result)
+        })
+
         // Delete single jobs data from db
         app.delete('/jobs/:id', async (req, res) => {
             const id = req.params.id;
