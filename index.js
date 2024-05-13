@@ -105,10 +105,22 @@ async function run() {
         })
 
         // Find bid request data using buyer email
-        app.get('/:email', async (req, res) => {
+        app.get('/bid-request/:email', async (req, res) => {
             const email = req.params.email
             const query = { buyerEmail: email }
             const result = await bidsCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        // Update total bid number
+        app.patch('/jobs/:id', async (req, res) => {
+            const id = req.params.id;
+            const {totalBid} = req.body;
+            const query = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: { job_applicant_number: totalBid}
+            }
+            const result = await jobsCollection.updateOne(query, updateDoc)
             res.send(result)
         })
 
