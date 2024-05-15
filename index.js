@@ -4,16 +4,14 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 require('dotenv').config()
 const port = process.env.PORT || 9000
 const app = express()
+// const jwt = require('jsonwebtoken') 
 
 // Middle were
 const corsOptions = {
-    origin: [
-        "http://localhost:5173",
-        "https://tomomoni-b17d8.web.app/",
-        "https://tomomoni-b17d8.firebaseapp.com/",
-    ],
+    origin: '*',
     credentials: true,
     optionSuccessStatus: 200,
+    
 }
 app.use(cors(corsOptions))
 app.use(express.json())
@@ -37,6 +35,15 @@ async function run() {
 
         const jobsCollection = client.db('tomomoni').collection('Jobs')
         const bidsCollection = client.db('tomomoni').collection('bids')
+
+        // jwt generator
+        // app.post('/jwt' , async (req, res) => {
+        //     const email = req.body;
+        //     const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, {
+        //         expiresIn: '1d'
+        //     })
+        //     res.send({token})
+        // })
 
         // Get all jobs data from db
         app.get('/jobs', async (req, res) => {
