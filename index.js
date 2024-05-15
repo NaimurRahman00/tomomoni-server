@@ -8,8 +8,9 @@ const app = express()
 // Middle were
 const corsOptions = {
     origin: [
-        'http://localhost:5173',
-        'http://localhost:5174'
+        "http://localhost:5173",
+        "https://tomomoni-b17d8.web.app/",
+        "https://tomomoni-b17d8.firebaseapp.com/",
     ],
     credentials: true,
     optionSuccessStatus: 200,
@@ -43,6 +44,15 @@ async function run() {
             res.send(result);
         });
 
+        // Only my applied job data using category
+        app.get('/bids', async (req, res) => {
+            const filter = req.query.category;
+            let query = {};
+            if (filter) query = { category: filter };
+            const result = await bidsCollection.find(query);
+            res.send(result);
+        })
+
         // Get single jobs data from db
         app.get('/jobs/:id', async (req, res) => {
             const id = req.params.id;
@@ -52,9 +62,9 @@ async function run() {
         })
 
         // get title based  data 
-        app.get('/:title', async (req, res) => {
+        app.get('/jobs-title/:title', async (req, res) => {
             const title = req.params.title;
-            const query = { title : title }
+            const query = { title }
             const result = await jobsCollection.find(query).toArray();
             res.send(result)
         })
@@ -97,11 +107,11 @@ async function run() {
         })
 
         // Only my posted job data using email
-        app.get('/:email', async (req, res) => {
+        app.get('/:email', async (req, res) => {  
             const email = req.params.email
             const query = { "buyer.email": email }
             const result = await jobsCollection.find(query).toArray();
-            res.send(result)
+            res.send(result) 
         })
 
         // Only my applied job data using email
@@ -123,10 +133,10 @@ async function run() {
         // Update total bid number
         app.patch('/jobs/:id', async (req, res) => {
             const id = req.params.id;
-            const {totalBid} = req.body;
+            const { totalBid } = req.body;
             const query = { _id: new ObjectId(id) }
             const updateDoc = {
-                $set: { job_applicant_number: totalBid}
+                $set: { job_applicant_number: totalBid }
             }
             const result = await jobsCollection.updateOne(query, updateDoc)
             res.send(result)
